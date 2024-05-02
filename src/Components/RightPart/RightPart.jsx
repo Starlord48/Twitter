@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { Button } from '@mui/material';
@@ -20,8 +20,17 @@ const RightPart = () => {
 
             <input type="text" className='py-3 rounded-full text-green-500 w-full pl-12' />
 
-            <div className='absolute top-0 left-0 pl-3 pt-3'>
-                <SearchIcon className='text-gray-500'/>
+            {/* <div className='absolute top-0 left-0 pl-3 pt-3'> */}
+            <div className="absolute ">
+                <input 
+                    type="text"
+                    // placeholder="Search"
+
+                    className="pl-10 rounded-md py-2 px-4 border focus:outline-none"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
             </div>
             <Brightness4Icon className='ml-3 cursor-pointer' onClick={handleChangeTheme}/>
 

@@ -8,6 +8,9 @@ import ImageIcon from '@mui/icons-material/Image';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import { useFormik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { createTweetReply } from '../../Store/Tweet/Action/Action';
+import { uploadToCloudinary } from './Utils/UploadToCloudinary';
 
 const style = {
     position: 'absolute',
@@ -23,27 +26,36 @@ const style = {
     borderRadius: 4
 };
 
-export default function ReplyModal({handleClose, open}) {
+export default function ReplyModal({item, handleClose, open}) {
+
     const navigate = useNavigate();
     const [uploadingImage, setUploadingImage] = React.useState(false);
     const [selectImage, setSelectedImage] = React.useState(null);
+    const dispatch = useDispatch();
 
-    const handleSubmit = (values) => {
-        console.log("handel submit", values);
+    const handleSubmit = (values, actions) => {
+        console.log("handel submit");
+        handleClose();
+        setSelectedImage(null)
+        actions.resetForm()
+        dispatch(createTweetReply(values))
     }
+
+    const {auth} = useSelector(store=>store)
+    
 
     const formik = useFormik({
         initialValues: {
             content: "",
             image: "",
-            twitId: 4
+            tweetId: item?.id
         },
         onSubmit: handleSubmit
     })
 
-    const handelSelectImage = (event) => {
+    const handelSelectImage = async (event) => {
         setUploadingImage(true);
-        const imgUrl = event.target.files[0]
+        const imgUrl = await uploadToCloudinary(event.target.files[0])
         formik.setFieldValue("image", imgUrl);
         setUploadingImage(false);
         setSelectedImage(imgUrl);
@@ -63,14 +75,14 @@ export default function ReplyModal({handleClose, open}) {
                             onClick={() => navigate("/profile/${6}")}
                             className='cursor-pointer'
                             alt='username'
-                            src='https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600'
+                            src={`${item?.user.image}`}
                         />
                         <div className='w-full'>
                             <div className="flex justify-between items-center">
                                 <div className='flex cursor-pointer items-center space-x-2'>
 
-                                    <span className='font-semibold'>Shepherd</span>
-                                    <span className='text-gray-600'>@shepherd_han .2m</span>
+                                    <span className='font-semibold'>{`${item?.user.fullName}`}</span>
+                                    <span className='text-gray-600'>@{`${item.user.fullName.split(" ").join("_").toLowerCase()}`} .2m</span>
                                     <VerifiedIcon fontSize='small' sx={{ color: "#1e88e5" }} />
                                 </div>
 
@@ -79,7 +91,7 @@ export default function ReplyModal({handleClose, open}) {
 
                             <div className='mt-2'>
                                 <div onClick={() => navigate('/twit/${3}')} className='cursor-pointer'>
-                                    <p className='mb-2 p-0'>This is a twitter  full stack clone with react and spring boot.</p>
+                                    <p className='mb-2 p-0'>{`${item?.content}`}</p>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +102,7 @@ export default function ReplyModal({handleClose, open}) {
                             <div className='flex space-x-5'>
                                 <Avatar
                                     alt="username"
-                                    src='https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600'
+                                    src={`${auth.user.image}`}
                                 />
                                 <div className='w-full'>
                                     <form onSubmit={formik.handleSubmit}>

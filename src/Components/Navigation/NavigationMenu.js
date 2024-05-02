@@ -7,6 +7,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PendingIcon from '@mui/icons-material/Pending';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export const navigationMenu=[
     {
@@ -54,6 +55,12 @@ export const navigationMenu=[
         icon:<PendingIcon/>,
         path:"/more,"
     },
-    
+    {
+        title: "settings",
+        icon :<SettingsIcon />,
+        path:"/settings"
+    }
     
 ]
+
+
